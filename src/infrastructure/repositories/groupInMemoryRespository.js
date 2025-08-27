@@ -29,6 +29,6 @@ export class GroupInMemoryRespository {
      * @returns {(Map<Group>|Array)}
      */
     getAll() {
-        return this.storage || [];
+        return (this.storage.size > 0) ? this.storage : [];
     }
 }
