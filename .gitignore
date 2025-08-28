@@ -1,7 +1,7 @@
 node_modules
 
-./storage/*.db
+.storage
 
 .env
 
-.yarn.lock
+yarn.lock
