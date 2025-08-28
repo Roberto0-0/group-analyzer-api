@@ -2,9 +2,14 @@
     "compilerOptions": {
         "checkJs": true,
         "module": "esnext",
-        "target": "es2022"
+        "target": "es2022",
+        "moduleResolution": "node",
+        "types": [
+            "node"
+        ]
     },
     "include": [
-        "./**/*.js"
+        "./**/*.js",
+        "node_modules/@types"
     ]
 }
