@@ -1,11 +1,12 @@
 import { Group } from "../../../domain/entities/Group.js";
-import { GroupInMemoryRespository } from "../../../infrastructure/repositories/groupInMemoryRespository.js";
+import { GroupSQLiteRespository } from "../../../infrastructure/repositories/groupSQLiteRepository.js";
+import { Result } from "../../common/result.js";
 
 export class GroupGetById {
-    /** @property {GroupInMemoryRespository} _repository*/
+    /** @property {GroupSQLiteRespository} _repository - SQLite repository*/
     #_repository;
 
-    /** @param {GroupInMemoryRespository} repository */
+    /** @param {GroupSQLiteRespository} repository */
     constructor(repository) {
         this.#_repository = repository;
     }
@@ -13,9 +14,12 @@ export class GroupGetById {
     /**
      * Get group by id.
      * @param {string} id - group id.
-     * @returns {(Group|null)} Group or null.
+     * @returns {Promise<Result>} Result.
      */
-    execute(id) {
-        return this.#_repository.getById(id);
+    async execute(id) {
+        const group = await this.#_repository.getByIdAsync(id);
+        if (!group) return Result.failure("Grupo não encontrado.", null);
+
+        return Result.success("Grupo encontrado.", group);
     }
 }
