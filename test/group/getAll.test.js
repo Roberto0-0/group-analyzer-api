@@ -1,13 +1,15 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { GroupInMemoryRespository } from "../../src/infrastructure/repositories/groupInMemoryRespository.js";
+import { GroupSQLiteRespository } from "../../src/infrastructure/repositories/groupSQLiteRepository.js";
 import { GroupGetAllUsecase } from "../../src/application/usecases/group/groupGetAllUsecase.js";
 
-test("should get all groups.", () => {
-    const repository = new GroupInMemoryRespository();
+test("should get all groups.", async () => {
+    const repository = new GroupSQLiteRespository();
 
     const getAllGroupsUsecase = new GroupGetAllUsecase(repository);
-    const response = getAllGroupsUsecase.execute();
+    const response = await getAllGroupsUsecase.execute();
 
-    assert.equal(response, 0);
+    if(!response.success) assert.fail(response.message);
+
+    assert.equal(response.data.length, 1);
 });
