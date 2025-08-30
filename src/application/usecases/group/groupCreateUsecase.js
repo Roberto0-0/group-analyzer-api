@@ -1,29 +1,30 @@
 import { Group } from "../../../domain/entities/Group.js";
-import { GroupInMemoryRespository } from "../../../infrastructure/repositories/groupInMemoryRespository.js";
+import { GroupSQLiteRespository } from "../../../infrastructure/repositories/groupSQLiteRepository.js";
+import { Result } from "../../common/result.js";
 import { GroupCreateRequest } from "../../requests/groupCreateRequest.js";
 
 export class GroupCreateUsecase {
     /**
-     * @property {GroupInMemoryRespository} _repository - in memory repository.
+     * @property {GroupSQLiteRespository} _repository - SQLite repository.
      */
     #_repositoy;
 
     /**
-     * @param {GroupInMemoryRespository} repository - in memory repository.
+     * @param {GroupSQLiteRespository} repository - SQLite repository.
      */
     constructor(repository) {
-        /** @type {GroupInMemoryRespository}*/
+        /** @type {GroupSQLiteRespository}*/
         this.#_repositoy = repository;
     }
 
     /**
      * Validates the request and returns a new group.
      * @param {GroupCreateRequest} request
-     * @returns {(Group|Error)} Group or Error.
+     * @returns {Promise<Result>} Result.
     */
-    execute(request) {
-        const groupExist = this.#_repositoy.getById(request.id);
-        if (groupExist) return new Error("This group already exist.");
+    async execute(request) {
+        const groupExist = await this.#_repositoy.getByIdAsync(request.id);
+        if (groupExist) return Result.failure("Este grupo já existe.", null);
 
         const newGroup = new Group(
             request.id,
@@ -33,8 +34,8 @@ export class GroupCreateUsecase {
             request.createdAt
         );
 
-        this.#_repositoy.create(newGroup);
+        await this.#_repositoy.addAsync(newGroup);
 
-        return newGroup;
+        return Result.success("Grupo criado com successo.", newGroup);
     }
 }
