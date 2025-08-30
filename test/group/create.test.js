@@ -1,15 +1,15 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { GroupCreateUsecase } from "../../src/application/usecases/group/groupCreateUsecase.js";
-import { GroupInMemoryRespository } from "../../src/infrastructure/repositories/groupInMemoryRespository.js";
+import { GroupSQLiteRespository } from "../../src/infrastructure/repositories/groupSQLiteRepository.js";
 import { GroupCreateRequest } from "../../src/application/requests/groupCreateRequest.js";
 
-test("should create group.", () => {
+test("should create group.", async () => {
     const groupForm = {
-        id: "293902030",
-        subject: "group subject",
-        ownerId: "2923829303",
-        memberCount: 20,
+        id: "2039403040",
+        subject: "my group",
+        ownerId: "12039023@c.us",
+        memberCount: 120,
         createdAt: Date.now()
     };
 
@@ -21,13 +21,11 @@ test("should create group.", () => {
         groupForm.createdAt,
     );
 
-    const groupRepository = new GroupInMemoryRespository();
+    const groupRepository = new GroupSQLiteRespository();
     const createGroupUsecase = new GroupCreateUsecase(groupRepository);
-    const response = createGroupUsecase.execute(request);
+    const response = await createGroupUsecase.execute(request);
 
-    if (response instanceof Error) {
-        return console.error(response.message);
-    }
+    if(!response.success) assert.fail(response.message);
 
-    assert.equal(response.subject, groupForm.subject);
+    assert.equal(response.success, true);
 });
