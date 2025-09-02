@@ -22,8 +22,6 @@ export class Group {
         /** @type {number} */
         this.memberCount = memberCount;
         /** @type {number} */
-        this.messageCount = 0;
-        /** @type {number} */
         this.createdAt = createdAt;
         /** @type {number} */
         this.registeredAt = Date.now();
