@@ -16,7 +16,7 @@ export class GroupGetAllUsecase {
     */
     async execute() {
         const groups = await this.#_repository.getAllAsync();
-        if(groups.length < 1) Result.success("Nenhum grupo foi encontrado", null);
+        if(groups.length < 1) Result.success("Nenhum grupo foi encontrado", []);
 
         return Result.success(`${groups.length} grupo's encontrado's`, groups);
     }
