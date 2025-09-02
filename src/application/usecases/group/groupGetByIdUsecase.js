@@ -1,4 +1,3 @@
-import { Group } from "../../../domain/entities/Group.js";
 import { GroupSQLiteRespository } from "../../../infrastructure/repositories/groupSQLiteRepository.js";
 import { Result } from "../../common/result.js";
 
