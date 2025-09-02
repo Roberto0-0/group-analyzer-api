@@ -4,7 +4,7 @@ import { GroupSQLiteRespository } from "../../src/infrastructure/repositories/gr
 import { GroupGetById } from "../../src/application/usecases/group/groupGetByIdUsecase.js";
 
 test("should get group by id.", async () => {
-    const id = "2039403040";
+    const id = "1293020340";
 
     const groupRepository = new GroupSQLiteRespository();
     const getGroupByIdUsecase = new GroupGetById(groupRepository);

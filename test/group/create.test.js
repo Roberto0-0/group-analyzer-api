@@ -6,10 +6,10 @@ import { GroupCreateRequest } from "../../src/application/requests/groupCreateRe
 
 test("should create group.", async () => {
     const groupForm = {
-        id: "2039403040",
-        subject: "my group",
-        ownerId: "12039023@c.us",
-        memberCount: 120,
+        id: "1293020340",
+        subject: "compras",
+        ownerId: "2930203@c.us",
+        memberCount: 250,
         createdAt: Date.now()
     };
 
