@@ -3,9 +3,28 @@ CREATE TABLE `groups` (
 	`subject` text(255) NOT NULL,
 	`owner_id` text(255) NOT NULL,
 	`member_count` integer NOT NULL,
-	`message_count` integer NOT NULL,
 	`created_at` integer NOT NULL,
 	`registered_at` integer NOT NULL
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `groups_id_unique` ON `groups` (`id`);
+CREATE UNIQUE INDEX `groups_id_unique` ON `groups` (`id`);--> statement-breakpoint
+CREATE TABLE `members` (
+	`id` text(255) PRIMARY KEY NOT NULL,
+	`name` text(255) NOT NULL,
+	`short_name` text(255) NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE `members_to_groups` (
+	`member_id` text(255) NOT NULL,
+	`gorup_id` text(255) NOT NULL,
+	`level` integer NOT NULL,
+	`xp` integer NOT NULL,
+	`required_xp` integer NOT NULL,
+	`message_count` integer NOT NULL,
+	`last_message_at` integer NOT NULL,
+	FOREIGN KEY (`member_id`) REFERENCES `members`(`id`) ON UPDATE no action ON DELETE cascade,
+	FOREIGN KEY (`gorup_id`) REFERENCES `groups`(`id`) ON UPDATE no action ON DELETE cascade
+);
+--> statement-breakpoint
+CREATE INDEX `member_idx` ON `members_to_groups` (`member_id`);--> statement-breakpoint
+CREATE INDEX `group_idx` ON `members_to_groups` (`gorup_id`);
