@@ -1,7 +1,10 @@
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { db } from "../persistence/dbContext.js";
 import { groups } from "../persistence/schema/group.js";
 import { Group } from "../../domain/entities/Group.js";
+import { members } from "../persistence/schema/member.js";
+import { membersToGroups } from "../persistence/schema/membersToGroups.js";
+import { GroupGetMembersDTO } from "../../application/DTOs/groupGetMembersDTO.js";
 
 export class GroupSQLiteRespository {
     /**
@@ -15,9 +18,8 @@ export class GroupSQLiteRespository {
             subject: group.subject,
             ownerId: group.ownerId,
             memberCount: group.memberCount,
-            messageCount: group.messageCount,
             createdAt: group.createdAt,
-            registeredAt: group.registeredAt,
+            registeredAt: group.registeredAt
         });
     }
 
@@ -32,10 +34,13 @@ export class GroupSQLiteRespository {
             subject: groups.subject,
             ownerId: groups.ownerId,
             memberCount: groups.memberCount,
-            messageCount: groups.messageCount,
+            messageCount: sql`count(${membersToGroups.messageCount})`.as("message_count"),
             createdAt: groups.createdAt,
             registeredAt: groups.registeredAt,
-        }).from(groups).where(eq(groups.id, id));
+        })
+            .from(groups)
+            .innerJoin(membersToGroups, eq(membersToGroups.groupId, id))
+            .where(eq(groups.id, id));
 
         return group[0] || null;
     }
@@ -46,6 +51,32 @@ export class GroupSQLiteRespository {
      */
     async getAllAsync() {
         return await db.select().from(groups) || [];
+    }
+
+    /**
+     * Get group members. 
+     * @param {string} groupId - group id.
+     * @returns {Promise<Array<GroupGetMembersDTO>|Array>} MemberGetByGroupDTO or []
+     */
+    async getMembers(groupId) {
+        const groupMembers = await db.select({
+            id: members.id,
+            groupId: membersToGroups.groupId,
+            shortName: members.shortName,
+            messageCount: membersToGroups.messageCount,
+            lastMessageAt: membersToGroups.lastMessageAt
+        }).from(groups)
+            .innerJoin(membersToGroups, eq(groups.id, membersToGroups.groupId))
+            .innerJoin(members, eq(members.id, membersToGroups.memberId))
+            .where(eq(groups.id, groupId));
+
+        return (groupMembers.length > 0) ? groupMembers.map(member => new GroupGetMembersDTO(
+            member.id,
+            member.groupId,
+            member.shortName,
+            member.messageCount,
+            member.lastMessageAt
+        )) : [];
     }
 
     /**
@@ -66,16 +97,6 @@ export class GroupSQLiteRespository {
      */
     async memberCountUpdateAsync(id, newMemberCount) {
         await db.update(groups).set({ memberCount: newMemberCount }).where(eq(groups.id, id));
-    }
-
-    /**
-     * group message count update. 
-     * @param {string} id - group id.
-     * @param {number} newMessageCount - new message count.
-     * @returns {Promise<void>} void 
-     */
-    async messageCountUpdateAsync(id, newMessageCount) {
-        await db.update(groups).set({ messageCount: newMessageCount }).where(eq(groups.id, id));
     }
 
     /**
