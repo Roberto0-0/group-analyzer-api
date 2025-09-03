@@ -14,6 +14,17 @@ CREATE TABLE `members` (
 	`short_name` text(255) NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE `members_timeouts` (
+	`group_id` text(255) NOT NULL,
+	`member_id` text(255) NOT NULL,
+	`expires_in` integer NOT NULL,
+	`reason` text(255),
+	FOREIGN KEY (`group_id`) REFERENCES `groups`(`id`) ON UPDATE no action ON DELETE cascade,
+	FOREIGN KEY (`member_id`) REFERENCES `members`(`id`) ON UPDATE no action ON DELETE cascade
+);
+--> statement-breakpoint
+CREATE INDEX `group_timeouts_idx` ON `members_timeouts` (`group_id`);--> statement-breakpoint
+CREATE INDEX `member_timoutes_idx` ON `members_timeouts` (`member_id`);--> statement-breakpoint
 CREATE TABLE `members_to_groups` (
 	`member_id` text(255) NOT NULL,
 	`gorup_id` text(255) NOT NULL,
@@ -26,5 +37,5 @@ CREATE TABLE `members_to_groups` (
 	FOREIGN KEY (`gorup_id`) REFERENCES `groups`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
-CREATE INDEX `member_idx` ON `members_to_groups` (`member_id`);--> statement-breakpoint
-CREATE INDEX `group_idx` ON `members_to_groups` (`gorup_id`);
+CREATE INDEX `member_to_grupo_idx` ON `members_to_groups` (`member_id`);--> statement-breakpoint
+CREATE INDEX `group_to_member_idx` ON `members_to_groups` (`gorup_id`);
