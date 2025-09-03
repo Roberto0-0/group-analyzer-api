@@ -1,10 +1,12 @@
-import { eq, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { db } from "../persistence/dbContext.js";
 import { groups } from "../persistence/schema/group.js";
 import { Group } from "../../domain/entities/Group.js";
 import { members } from "../persistence/schema/member.js";
 import { membersToGroups } from "../persistence/schema/membersToGroups.js";
 import { GroupGetMembersDTO } from "../../application/DTOs/groupGetMembersDTO.js";
+import { MemberTimeout } from "../../domain/valueObject/MemberTimeout.js";
+import { membersTimeouts } from "../persistence/schema/membersTimeouts.js";
 
 export class GroupSQLiteRespository {
     /**
@@ -42,7 +44,7 @@ export class GroupSQLiteRespository {
             .innerJoin(membersToGroups, eq(membersToGroups.groupId, id))
             .where(eq(groups.id, id));
 
-        return group[0] || null;
+        return (!group[0].id) ? null : group[0];
     }
 
     /**
@@ -106,5 +108,48 @@ export class GroupSQLiteRespository {
      */
     async deleteByIdAsync(id) {
         await db.delete(groups).where(eq(groups.id, id));
+    }
+
+    /**
+     * Add member timeout.
+     * @param {MemberTimeout} memberTimeout
+     * @returns {Promise<void>}
+     */
+    async addMemberTimeoutAsync(memberTimeout) {
+        await db.insert(membersTimeouts).values({
+            groupId: memberTimeout.groupId,
+            memberId: memberTimeout.memberId,
+            expiresIn: memberTimeout.expiresIn,
+            reason: memberTimeout.reason,
+        })
+    }
+
+    /**
+     * Check if the member is in timeout.
+     * @param {string} groupId - group id. 
+     * @param {string} memberId - member id. 
+     * @returns {Promise<boolean>}
+     */
+    async memberTimeoutVerify(groupId, memberId) {
+        const memberTimeout = await db.select()
+            .from(membersTimeouts)
+            .where(and(
+                eq(membersTimeouts.groupId, groupId),
+                eq(membersTimeouts.memberId, memberId),
+            ))
+
+        if (!memberTimeout[0]) return false;
+
+        if (memberTimeout[0].expiresIn - Date.now() < 0) {
+            await db.delete(membersTimeouts)
+                .where(and(
+                    eq(membersTimeouts.groupId, groupId),
+                    eq(membersTimeouts.memberId, memberId)
+                ))
+
+            return false;
+        }
+
+        return true;
     }
 }
