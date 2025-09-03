@@ -2,7 +2,6 @@ import { MemberToGroup } from "../../../domain/valueObject/MemberToGroup.js";
 import { GroupSQLiteRespository } from "../../../infrastructure/repositories/groupSQLiteRepository.js";
 import { MemberSQLiteRespository } from "../../../infrastructure/repositories/memberSQLiteRepository.js";
 import { Result } from "../../common/result.js";
-import { MemberCreateRequest } from "../../requests/memberCreateRequest.js";
 
 export class MemberJoinToGroupUsecase {
     /**
