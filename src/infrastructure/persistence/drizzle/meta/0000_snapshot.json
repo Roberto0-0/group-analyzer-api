@@ -1,9 +1,69 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "079fa757-f523-49ac-b5ae-f4d1d45ca8f6",
+  "id": "f420c186-5d86-4028-b8a2-cc3a9705f19d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
+    "blocked_modules": {
+      "name": "blocked_modules",
+      "columns": {
+        "group_id": {
+          "name": "group_id",
+          "type": "text(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "module_name": {
+          "name": "module_name",
+          "type": "text(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "blocked_modules_module_name_unique": {
+          "name": "blocked_modules_module_name_unique",
+          "columns": [
+            "module_name"
+          ],
+          "isUnique": true
+        },
+        "group_blocked_module_idx": {
+          "name": "group_blocked_module_idx",
+          "columns": [
+            "group_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "blocked_modules_group_id_groups_id_fk": {
+          "name": "blocked_modules_group_id_groups_id_fk",
+          "tableFrom": "blocked_modules",
+          "tableTo": "groups",
+          "columnsFrom": [
+            "group_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
     "groups": {
       "name": "groups",
       "columns": {

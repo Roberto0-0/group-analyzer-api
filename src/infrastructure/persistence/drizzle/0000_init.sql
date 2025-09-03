@@ -1,3 +1,12 @@
+CREATE TABLE `blocked_modules` (
+	`group_id` text(255) NOT NULL,
+	`module_name` text(255) NOT NULL,
+	`created_at` integer NOT NULL,
+	FOREIGN KEY (`group_id`) REFERENCES `groups`(`id`) ON UPDATE no action ON DELETE cascade
+);
+--> statement-breakpoint
+CREATE UNIQUE INDEX `blocked_modules_module_name_unique` ON `blocked_modules` (`module_name`);--> statement-breakpoint
+CREATE INDEX `group_blocked_module_idx` ON `blocked_modules` (`group_id`);--> statement-breakpoint
 CREATE TABLE `groups` (
 	`id` text(255) PRIMARY KEY NOT NULL,
 	`subject` text(255) NOT NULL,
