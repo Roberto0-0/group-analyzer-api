@@ -7,6 +7,9 @@ import { membersToGroups } from "../persistence/schema/membersToGroups.js";
 import { GroupGetMembersDTO } from "../../application/DTOs/groupGetMembersDTO.js";
 import { MemberTimeout } from "../../domain/valueObject/MemberTimeout.js";
 import { membersTimeouts } from "../persistence/schema/membersTimeouts.js";
+import { blockedModules } from "../persistence/schema/blockedModules.js";
+import { BlockedModule } from "../../domain/valueObject/BlockedModule.js";
+import { GroupOutDTO } from "../../application/DTOs/groupOutDTO.js";
 
 export class GroupSQLiteRespository {
     /**
@@ -36,15 +39,25 @@ export class GroupSQLiteRespository {
             subject: groups.subject,
             ownerId: groups.ownerId,
             memberCount: groups.memberCount,
-            messageCount: sql`count(${membersToGroups.messageCount})`.as("message_count"),
             createdAt: groups.createdAt,
             registeredAt: groups.registeredAt,
-        })
-            .from(groups)
-            .innerJoin(membersToGroups, eq(membersToGroups.groupId, id))
-            .where(eq(groups.id, id));
+        }).from(groups).where(eq(groups.id, id));
 
-        return (!group[0].id) ? null : group[0];
+        if (!group[0]) return null;
+
+        const result = await db.select({
+            messageCount: sql`count(${membersToGroups.messageCount})`.as("message_count")
+        }).from(membersToGroups).where(eq(membersToGroups.groupId, id))
+
+        return new GroupOutDTO(
+            group[0].id,
+            group[0].subject,
+            group[0].ownerId,
+            group[0].memberCount,
+            result[0].messageCount,
+            group[0].createdAt,
+            group[0].registeredAt
+        );
     }
 
     /**
@@ -151,5 +164,48 @@ export class GroupSQLiteRespository {
         }
 
         return true;
+    }
+
+    /**
+     * Block module.
+     * @param {BlockedModule} blockedModule
+     * @return {Promise<void>} void
+    */
+    async blockModuleAsync(blockedModule) {
+        await db.insert(blockedModules).values({
+            groupId: blockedModule.groupId,
+            moduleName: blockedModule.moduleName,
+            createdAt: blockedModule.createdAt
+        });
+    }
+
+    /**
+     * Get module.
+     * @param {string} groupId - group id.
+     * @param {string} moduleName - module name. 
+     * @return {Promise<BlockedModule>}
+    */
+    async getModuleByName(groupId, moduleName) {
+        const blockedModule = await db.select()
+            .from(blockedModules)
+            .where(and(
+                eq(blockedModules.groupId, groupId),
+                eq(blockedModules.moduleName, moduleName)
+            ));
+
+        return (!blockedModule[0]) ? null : blockedModule[0];
+    }
+
+    /**
+     * Unblock module.
+     * @param {string} groupId - group id. 
+     * @param {string} moduleName - module name. 
+     * @return {Promise<void>} void
+    */
+    async unBlockModule(groupId, moduleName) {
+        await db.delete(blockedModules).where(and(
+            eq(blockedModules.groupId, groupId),
+            eq(blockedModules.moduleName, moduleName),
+        ));
     }
 }
