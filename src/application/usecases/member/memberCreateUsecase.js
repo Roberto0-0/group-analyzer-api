@@ -20,13 +20,13 @@ export class MemberCreateUsecase {
 
     /**
      * Validates the request and returns a new member.
-     * @param {MemberCreateRequest} request
-     * @param {string} groupId 
+     * @param {MemberCreateRequest} request - Member create request.
+     * @param {string} groupId - group id.
      * @returns {Promise<Result>} Result.
     */
     async execute(request, groupId) {
         const memberExist = await this.#_repositoy.getByIdAsync(request.id);
-        if (memberExist) return Result.failure("Member já existe.", null);
+        if (memberExist) return Result.failure("Membro já existe.", null);
 
         const newMember = new Member(request.id, request.name);
 
