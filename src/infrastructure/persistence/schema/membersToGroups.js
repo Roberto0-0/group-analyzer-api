@@ -20,8 +20,8 @@ export const membersToGroups = sqliteTable(
         lastMessageAt: types.integer("last_message_at", { mode: "number" }).notNull(),
     },
     (table) => [
-        index("member_idx").on(table.memberId),
-        index("group_idx").on(table.groupId)
+        index("member_to_grupo_idx").on(table.memberId),
+        index("group_to_member_idx").on(table.groupId)
     ]
 );
 
