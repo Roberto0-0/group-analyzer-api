@@ -3,6 +3,7 @@ import * as types from "drizzle-orm/sqlite-core";
 import { relations } from "drizzle-orm";
 import { membersToGroups } from "./membersToGroups.js";
 import { membersTimeouts } from "./membersTimeouts.js";
+import { blockedModules } from "./blockedModules.js";
 
 export const groups = sqliteTable(
     "groups",
@@ -18,5 +19,6 @@ export const groups = sqliteTable(
 
 export const groupRelations = relations(groups, ({ many }) => ({
     membersToGroups: many(membersToGroups),
-    membersTimeouts: many(membersTimeouts)
+    membersTimeouts: many(membersTimeouts),
+    blockedModules: many(blockedModules)
 }));
