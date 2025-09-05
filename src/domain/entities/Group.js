@@ -1,24 +1,20 @@
 export class Group {
     /**
     * @param {string} id - group id.
-    * @param {string} subject - group subject.
-    * @param {string} ownerId - group owner id.
+    * @param {string} name - group name.
     * @param {number} memberCount - group member count.
     * @param {number} createdAt - group creation timestamp.
     */
     constructor(
         id,
-        subject,
-        ownerId,
+        name,
         memberCount,
         createdAt
     ) {
         /** @type {string} */
         this.id = id;
         /** @type {string} */
-        this.subject = subject;
-        /** @type {string} */
-        this.ownerId = ownerId;
+        this.name = name;
         /** @type {number} */
         this.memberCount = memberCount;
         /** @type {number} */
