@@ -14,13 +14,11 @@ export class MemberToGroup {
         /** @type {number}*/
         this.xp = 0;
         /** @type {number}*/
-        this.requiredXp;
+        this.xpRequired = 0;
         /** @type {number}*/
         this.messageCount = 1;
         /** @type {number}*/
         this.lastMessageAt = Date.now();
-
-        this.#requiredXpCalculate();
     }
 
     /**
@@ -28,16 +26,55 @@ export class MemberToGroup {
      * @param {number} newLevel - new member level.
      * @return {void} void
      */
-    setRequiredXp(newLevel) {
+    setXpRequired(newLevel) {
         this.level = newLevel;
-        this.#requiredXpCalculate();
+        this.xpRequired = this.#xpRequiredCalc();
     }
 
     /**
     * Calculate required xp.
-    * @return {void} void
+    * @return {number} void
     */
-    #requiredXpCalculate() {
-        this.requiredXp = Math.floor(Math.pow(this.level, 2) * 10);
+    #xpRequiredCalc() {
+        return Math.floor(Math.pow(this.level, 2) * 10);
+    }
+
+    /**
+     * Update level.
+     * @param {object} member 
+     * @returns {void}
+     */
+    levelUp(member) {
+        let xp = member.xp;
+        let newXp = 0;
+
+        if (member.level === 1000) return;
+
+        if (xp >= member.xpRequired) {
+            newXp = xp - member.xpRequired
+
+            member.level++;
+            this.setXpRequired(member.level);
+
+            if (newXp >= member.xpRequired) {
+                do {
+                    newXp = newXp - member.xpRequired;
+                    member.level++;
+                    this.setXpRequired(member.level);
+                } while (newXp >= member.xpRequired);
+
+
+                this.level = member.level;
+                this.xp = newXp;
+                return;
+            }
+
+            this.level = member.level;
+            this.xp = newXp;
+            return;
+        }
+
+        this.xp = xp;
+        return;
     }
 }
