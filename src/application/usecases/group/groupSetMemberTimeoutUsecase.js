@@ -2,7 +2,6 @@ import { MemberTimeout } from "../../../domain/valueObject/MemberTimeout.js";
 import { GroupSQLiteRespository } from "../../../infrastructure/repositories/groupSQLiteRepository.js";
 import { MemberSQLiteRespository } from "../../../infrastructure/repositories/memberSQLiteRepository.js";
 import { Result } from "../../common/result.js";
-import { GroupSetMemberTimeoutRequest } from "../../requests/groupSetMemberTimeoutRequest.js";
 
 export class GroupSetMemberTimeoutUsecase {
     /**
@@ -27,7 +26,7 @@ export class GroupSetMemberTimeoutUsecase {
      * Define timeout for member.
      * @param {string} groupId - group id.
      * @param {string} memberId - member id.
-     * @param {GroupSetMemberTimeoutRequest} request
+     * @param {object} request
      * @returns {Promise<Result>} Result
     */
     async execute(groupId, memberId, request) {
