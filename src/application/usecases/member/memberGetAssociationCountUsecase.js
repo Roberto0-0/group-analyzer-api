@@ -19,7 +19,7 @@ export class MemberGetAssociationCountUsecase {
         const member = await this.#_repository.getByIdAsync(id);
         if (!member) return Result.failure("Membro não encontrado.", null);
 
-        const count = await this.#_repository.getAssociationCount(id);
-        return Result.success(`${count} associações ao membro.`, count);
+        const result = await this.#_repository.getAssociationCount(id);
+        return Result.success(`${result.count} associações ao membro.`, result);
     }
 }
