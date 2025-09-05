@@ -1,7 +1,7 @@
 import { GroupSQLiteRespository } from "../../../infrastructure/repositories/groupSQLiteRepository.js";
 import { Result } from "../../common/result.js";
 
-export class GroupSubjectUpdateUsecase {
+export class GroupNameUpdateUsecase {
     /**
      * @property {GroupSQLiteRespository} _repository - SQLite repository.
      */
@@ -18,15 +18,15 @@ export class GroupSubjectUpdateUsecase {
     /**
      * Check and update the subject, if the group exists. 
      * @param {string} id - group id. 
-     * @param {string} newSubject - new group subject. 
+     * @param {string} newName - new group subject. 
      * @returns {Promise<Result>} Result 
     */
-    async execute(id, newSubject) {
+    async execute(id, newName) {
         const groupExist = await this.#_repositoy.getByIdAsync(id);
         if (!groupExist) return Result.failure("Grupo não encontrado.", null);
 
-        await this.#_repositoy.subjectUpdateAsync(id, newSubject);
+        await this.#_repositoy.nameUpdateAsync(id, newName);
 
-        return Result.success("Assunto do grupo atualizado.", null);
+        return Result.success("Nome do grupo atualizado.", null);
     }
 }
