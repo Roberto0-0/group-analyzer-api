@@ -12,6 +12,6 @@ dotenv.config({
 if (existsSync(join(process.cwd(), process.env.DATA_SOURCE))) process.exit(0);
 
 try {
-    execSync("npx drizzle-kit generate --name=init --config=drizzle.config.js", { stdio: "inherit" });
-    execSync("npx drizzle-kit push --config=drizzle.config.js", { stdio: "inherit" });
+    execSync("npx drizzle-kit generate --name=init", { stdio: "inherit" });
+    execSync("npx drizzle-kit push", { stdio: "inherit" });
 } catch (error) { process.exit(1); }
