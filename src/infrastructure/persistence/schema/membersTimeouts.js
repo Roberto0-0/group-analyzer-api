@@ -1,4 +1,4 @@
-import { sqliteTable, index } from "drizzle-orm/sqlite-core";
+import { sqliteTable, index, primaryKey } from "drizzle-orm/sqlite-core";
 import * as type from "drizzle-orm/sqlite-core";
 import { relations } from "drizzle-orm";
 import { groups } from "./group.js";
@@ -18,7 +18,8 @@ export const membersTimeouts = sqliteTable(
     },
     (table) => [
         index("group_timeouts_idx").on(table.groupId),
-        index("member_timoutes_idx").on(table.memberId)
+        index("member_timoutes_idx").on(table.memberId),
+        primaryKey({ columns: [table.groupId, table.memberId]})
     ]
 );
 
