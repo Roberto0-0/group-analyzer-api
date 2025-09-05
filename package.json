@@ -1,11 +1,15 @@
 {
     "name": "group-analyzer",
-    "version": "0.7.0",
+    "version": "1.0.0",
     "main": "./index.js",
     "type": "module",
     "license": "MIT",
     "scripts": {
         "test": "node --test",
+        "migration:generate": "drizzle-kit generate --name=init --config=drizzle.config.js",
+        "migration:push": "drizzle-kit push --config=drizzle.config.js"
+    },
+    "bin": {
         "migration:generate": "drizzle-kit generate --name=init --config=drizzle.config.js",
         "migration:push": "drizzle-kit push --config=drizzle.config.js"
     },
