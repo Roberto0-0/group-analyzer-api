@@ -1,4 +1,4 @@
-import { sqliteTable, index } from "drizzle-orm/sqlite-core";
+import { sqliteTable, index, primaryKey } from "drizzle-orm/sqlite-core";
 import * as types from "drizzle-orm/sqlite-core";
 import { relations } from "drizzle-orm";
 import { members } from "./member.js";
@@ -15,13 +15,14 @@ export const membersToGroups = sqliteTable(
             .references(() => groups.id, { onDelete: "cascade" }),
         level: types.integer("level", { mode: "number" }).notNull(),
         xp: types.integer("xp", { mode: "number" }).notNull(),
-        requiredXp: types.integer("required_xp", { mode: "number" }).notNull(),
+        xpRequired: types.integer("xp_required", { mode: "number" }).notNull(),
         messageCount: types.integer("message_count", { mode: "number" }).notNull(),
         lastMessageAt: types.integer("last_message_at", { mode: "number" }).notNull(),
     },
     (table) => [
         index("member_to_grupo_idx").on(table.memberId),
-        index("group_to_member_idx").on(table.groupId)
+        index("group_to_member_idx").on(table.groupId),
+        primaryKey({ columns: [table.groupId, table.memberId] })
     ]
 );
 
