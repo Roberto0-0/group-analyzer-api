@@ -1,13 +1,17 @@
 import { defineConfig } from "drizzle-kit";
+import { join } from "node:path";
 import * as dotenv from "dotenv";
 
-dotenv.config();
+dotenv.config({
+    path: join(process.cwd(), ".env"),
+    quiet: true
+});
 
 export default defineConfig({
     dialect: "sqlite",
     schema: "./src/infrastructure/persistence/schema/*.js",
-    out: "./src/infrastructure/persistence/drizzle",
+    out: "./src/infrastructure/persistence/migrations",
     dbCredentials: {
-        url: process.env.DATA_SOURCE
+        url: join(process.cwd(), process.env.DATA_SOURCE) 
     }
 });
