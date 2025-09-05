@@ -49,7 +49,7 @@ export class MemberSQLiteRespository {
             shortName: members.shortName,
             level: membersToGroups.level,
             xp: membersToGroups.xp,
-            requiredXp: membersToGroups.requiredXp,
+            xpRequired: membersToGroups.xpRequired,
             messageCount: membersToGroups.messageCount,
             lastMessageAt: membersToGroups.lastMessageAt
         }).from(members)
@@ -69,7 +69,7 @@ export class MemberSQLiteRespository {
             member[0].shortName,
             member[0].level,
             member[0].xp,
-            member[0].requiredXp,
+            member[0].xpRequired,
             member[0].messageCount,
             member[0].lastMessageAt
         ) : null;
@@ -96,7 +96,7 @@ export class MemberSQLiteRespository {
             shortName: members.shortName,
             level: membersToGroups.level,
             xp: membersToGroups.xp,
-            requiredXp: membersToGroups.requiredXp,
+            xpRequired: membersToGroups.xpRequired,
             messageCount: membersToGroups.messageCount,
             lastMessageAt: membersToGroups.lastMessageAt
         }).from(groups)
@@ -111,7 +111,7 @@ export class MemberSQLiteRespository {
             member.shortName,
             member.level,
             member.xp,
-            member.requiredXp,
+            member.xpRequired,
             member.messageCount,
             member.lastMessageAt,
         ));
@@ -143,6 +143,20 @@ export class MemberSQLiteRespository {
         await db.update(members).set({
             name: newName, shortName: newShortName
         }).where(eq(members.id, id));
+    }
+
+    /**
+     * Member update status. 
+     * @param {string} id - member id.
+     * @param {string} groupId - group id.
+     * @param {object} request - update requeset.
+     * @returns {Promise<void>} void 
+     */
+    async statusUpdateAsync(id, groupId, request) {
+        await db.update(membersToGroups).set(request).where(and(
+            eq(membersToGroups.memberId, id),
+            eq(membersToGroups.groupId, groupId)
+        ));
     }
 
     /**
@@ -181,7 +195,7 @@ export class MemberSQLiteRespository {
             groupId: memberToGroup.groupId,
             level: memberToGroup.level,
             xp: memberToGroup.xp,
-            requiredXp: memberToGroup.requiredXp,
+            xpRequired: memberToGroup.xpRequired,
             messageCount: memberToGroup.messageCount,
             lastMessageAt: memberToGroup.lastMessageAt
         });
