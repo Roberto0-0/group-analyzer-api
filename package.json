@@ -1,17 +1,14 @@
 {
     "name": "group-analyzer",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "main": "./index.js",
     "type": "module",
     "license": "MIT",
+    "bin": {
+        "db:init": "./bin/init-db.js"
+    },
     "scripts": {
         "test": "node --test",
-        "migration:generate": "drizzle-kit generate --name=init --config=drizzle.config.js",
-        "migration:push": "drizzle-kit push --config=drizzle.config.js"
-    },
-    "bin": {
-        "migration:generate": "drizzle-kit generate --name=init --config=drizzle.config.js",
-        "migration:push": "drizzle-kit push --config=drizzle.config.js"
     },
     "dependencies": {
         "better-sqlite3": "^12.2.0",
