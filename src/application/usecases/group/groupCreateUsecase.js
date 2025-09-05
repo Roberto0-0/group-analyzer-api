@@ -1,7 +1,6 @@
 import { Group } from "../../../domain/entities/Group.js";
 import { GroupSQLiteRespository } from "../../../infrastructure/repositories/groupSQLiteRepository.js";
 import { Result } from "../../common/result.js";
-import { GroupCreateRequest } from "../../requests/groupCreateRequest.js";
 
 export class GroupCreateUsecase {
     /**
@@ -19,7 +18,7 @@ export class GroupCreateUsecase {
 
     /**
      * Validates the request and returns a new group.
-     * @param {GroupCreateRequest} request
+     * @param {object} request
      * @returns {Promise<Result>} Result.
     */
     async execute(request) {
@@ -28,8 +27,7 @@ export class GroupCreateUsecase {
 
         const newGroup = new Group(
             request.id,
-            request.subject,
-            request.ownerId,
+            request.name,
             request.memberCount,
             request.createdAt
         );
