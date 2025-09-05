@@ -1,6 +1,5 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { GroupSetMemberTimeoutRequest } from "../../src/application/requests/groupSetMemberTimeoutRequest.js";
 import { GroupSetMemberTimeoutUsecase } from "../../src/application/usecases/group/groupSetMemberTimeoutUsecase.js";
 import { MemberSQLiteRespository } from "../../src/infrastructure/repositories/memberSQLiteRepository.js";
 import { GroupSQLiteRespository } from "../../src/infrastructure/repositories/groupSQLiteRepository.js";
@@ -11,7 +10,10 @@ test("should set member timeout.", async () => {
 
     const groupId = "1293020340";
     const memberId = "29392030@c.us";
-    const request = new GroupSetMemberTimeoutRequest("30m", "Muito tchola");
+    const request = {
+        timeRef: "30m",
+        reason: "Mucho gay"
+    }
 
     const setMemberTimeouot = new GroupSetMemberTimeoutUsecase(groupRepository, memberRepository);
     const response = await setMemberTimeouot.execute(groupId, memberId, request);
