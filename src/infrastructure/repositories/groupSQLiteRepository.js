@@ -20,8 +20,7 @@ export class GroupSQLiteRespository {
     async addAsync(group) {
         await db.insert(groups).values({
             id: group.id,
-            subject: group.subject,
-            ownerId: group.ownerId,
+            name: group.name,
             memberCount: group.memberCount,
             createdAt: group.createdAt,
             registeredAt: group.registeredAt
@@ -36,8 +35,7 @@ export class GroupSQLiteRespository {
     async getByIdAsync(id) {
         const group = await db.select({
             id: groups.id,
-            subject: groups.subject,
-            ownerId: groups.ownerId,
+            name: groups.name,
             memberCount: groups.memberCount,
             createdAt: groups.createdAt,
             registeredAt: groups.registeredAt,
@@ -46,13 +44,12 @@ export class GroupSQLiteRespository {
         if (!group[0]) return null;
 
         const result = await db.select({
-            messageCount: sql`count(${membersToGroups.messageCount})`.as("message_count")
+            messageCount: sql`SUM(${membersToGroups.messageCount})`.mapWith(Number)
         }).from(membersToGroups).where(eq(membersToGroups.groupId, id))
 
         return new GroupOutDTO(
             group[0].id,
-            group[0].subject,
-            group[0].ownerId,
+            group[0].name,
             group[0].memberCount,
             result[0].messageCount,
             group[0].createdAt,
@@ -95,13 +92,13 @@ export class GroupSQLiteRespository {
     }
 
     /**
-     * group subject update. 
+     * group name update. 
      * @param {string} id - group id.
-     * @param {string} newSubject - new group subject.
+     * @param {string} newName - new group name.
      * @returns {Promise<void>} void 
      */
-    async subjectUpdateAsync(id, newSubject) {
-        await db.update(groups).set({ subject: newSubject }).where(eq(groups.id, id));
+    async nameUpdateAsync(id, newName) {
+        await db.update(groups).set({ name: newName }).where(eq(groups.id, id));
     }
 
     /**
