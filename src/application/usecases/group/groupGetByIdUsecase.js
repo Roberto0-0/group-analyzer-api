@@ -1,7 +1,7 @@
 import { GroupSQLiteRespository } from "../../../infrastructure/repositories/groupSQLiteRepository.js";
 import { Result } from "../../common/result.js";
 
-export class GroupGetById {
+export class GroupGetByIdUsecase {
     /** @property {GroupSQLiteRespository} _repository - SQLite repository*/
     #_repository;
 
