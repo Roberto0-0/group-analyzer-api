@@ -9,8 +9,7 @@ export const groups = sqliteTable(
     "groups",
     {
         id: types.text("id", { length: 255 }).unique().notNull().primaryKey(),
-        subject: types.text("subject", { length: 255 }).notNull(),
-        ownerId: types.text("owner_id", { length: 255 }).notNull(),
+        name: types.text("name", { length: 255 }).notNull(),
         memberCount: types.integer("member_count").notNull(),
         createdAt: types.integer("created_at", { mode: "number" }).notNull(),
         registeredAt: types.integer("registered_at", { mode: "number" }).notNull()
