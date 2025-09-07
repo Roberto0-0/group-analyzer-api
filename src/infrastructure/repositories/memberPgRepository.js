@@ -1,11 +1,11 @@
 import { and, eq, sql } from "drizzle-orm";
-import { IMemberRepository } from "../../application/interfaces/IMemberRepository";
-import { Member } from "../../domain/entities/Member";
-import { db } from "../persistence/dbContext";
-import { groups, members } from "../persistence/schema";
-import { MemberGetByGroupDTO } from "../../application/DTOs/memberGetByGroupDTO";
-import { membersToGroups } from "../persistence/schema/membersToGroups";
-import { MemberToGroup } from "../../domain/valueObject/MemberToGroup";
+import { IMemberRepository } from "../../application/interfaces/IMemberRepository.js";
+import { Member } from "../../domain/entities/Member.js";
+import { db } from "../persistence/dbContext.js";
+import { groups, members } from "../persistence/schema/index.js";
+import { MemberGetByGroupDTO } from "../../application/DTOs/memberGetByGroupDTO.js";
+import { membersToGroups } from "../persistence/schema/membersToGroups.js";
+import { MemberToGroup } from "../../domain/valueObject/MemberToGroup.js";
 
 /** @implements {IMemberRepository} */
 export class MemberPgRepository {
