@@ -1,22 +1,27 @@
-import test from "node:test";
+import test, { after } from "node:test";
 import assert from "node:assert/strict";
 import { GroupCreateUsecase } from "../../src/application/usecases/group/groupCreateUsecase.js";
-import { GroupSQLiteRespository } from "../../src/infrastructure/repositories/groupSQLiteRepository.js";
+import { GroupPgRepository } from "../../src/infrastructure/repositories/groupPgRepository.js";
+import { db } from "../../src/infrastructure/persistence/dbContext.js";
 
 test("should create group.", async () => {
     const groupForm = {
         id: "1293020340",
-        subject: "compras",
-        ownerId: "2930203@c.us",
-        memberCount: 250,
+        name: "compras",
+        memberCount: 10,
         createdAt: Date.now()
     };
 
-    const groupRepository = new GroupSQLiteRespository();
-    const createGroupUsecase = new GroupCreateUsecase(groupRepository);
+    const repository = new GroupPgRepository();
+
+    const createGroupUsecase = new GroupCreateUsecase(repository);
     const response = await createGroupUsecase.execute(groupForm);
 
-    if(!response.success) assert.fail(response.message);
+    if (!response.success) assert.fail(response.message);
 
     assert.equal(response.success, true);
+
+    after(async () => {
+        await db.$client.end();
+    });
 });
