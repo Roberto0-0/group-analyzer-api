@@ -1,18 +1,14 @@
-import { GroupSQLiteRespository } from "../../../infrastructure/repositories/groupSQLiteRepository.js";
 import { Result } from "../../common/result.js";
+import { IGroupRepository } from "../../interfaces/IGroupRepository.js";
 
 export class GroupNameUpdateUsecase {
-    /**
-     * @property {GroupSQLiteRespository} _repository - SQLite repository.
-     */
-    #_repositoy;
+    /** @property {IGroupRepository} _repository */
+    #_repository;
 
-    /**
-     * @param {GroupSQLiteRespository} repository - SQLite repository.
-     */
+    /** @param {IGroupRepository} repository */
     constructor(repository) {
-        /** @type {GroupSQLiteRespository}*/
-        this.#_repositoy = repository;
+        /** @type {IGroupRepository}*/
+        this.#_repository = repository;
     }
 
     /**
@@ -22,10 +18,10 @@ export class GroupNameUpdateUsecase {
      * @returns {Promise<Result>} Result 
     */
     async execute(id, newName) {
-        const groupExist = await this.#_repositoy.getByIdAsync(id);
+        const groupExist = await this.#_repository.getByIdAsync(id);
         if (!groupExist) return Result.failure("Grupo não encontrado.", null);
 
-        await this.#_repositoy.nameUpdateAsync(id, newName);
+        await this.#_repository.nameUpdateAsync(id, newName);
 
         return Result.success("Nome do grupo atualizado.", null);
     }
