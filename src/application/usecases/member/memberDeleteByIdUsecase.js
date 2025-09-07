@@ -1,18 +1,14 @@
-import { MemberSQLiteRespository } from "../../../infrastructure/repositories/memberSQLiteRepository.js";
 import { Result } from "../../common/result.js"
+import { IMemberRepository } from "../../interfaces/IMemberRepository.js";
 
 export class MemberDeleteByIdUsecase {
-    /**
-     * @property {MemberSQLiteRespository} _repository - SQLite repository.
-     */
-    #_repositoy;
+    /** @property {IMemberRepository} _repository */
+    #_repository;
 
-    /**
-     * @param {MemberSQLiteRespository} repository - SQLite repository.
-     */
+    /** @param {IMemberRepository} repository */
     constructor(repository) {
-        /** @type {MemberSQLiteRespository}*/
-        this.#_repositoy = repository;
+        /** @type {IMemberRepository}*/
+        this.#_repository = repository;
     }
 
     /**
@@ -21,10 +17,10 @@ export class MemberDeleteByIdUsecase {
      * @returns {Promise<Result>} Result 
     */
     async execute(id) {
-        const groupExist = await this.#_repositoy.getByIdAsync(id);
+        const groupExist = await this.#_repository.getByIdAsync(id);
         if (!groupExist) return Result.failure("Membro não encontrado.", null);
 
-        await this.#_repositoy.deleteByIdAsync(id);
+        await this.#_repository.deleteByIdAsync(id);
 
         return Result.success("Membro deletado com sucesso.", null);
     }
