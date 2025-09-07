@@ -5,22 +5,18 @@ import { MemberDeleteByIdUsecase } from "../../application/usecases/member/membe
 import { MemberGetAllByGroupIdUsecase } from "../../application/usecases/member/memberGetAllByGroupUsecase.js";
 import { MemberGetAllUsecase } from "../../application/usecases/member/memberGetAllUsecase.js";
 import { MemberGetAssociationCountUsecase } from "../../application/usecases/member/memberGetAssociationCountUsecase.js";
+import { MemberGetByAssociationUsacase } from "../../application/usecases/member/memberGetByAssociantionUsecase.js";
 import { MemberGetByGroupIdUsecase } from "../../application/usecases/member/memberGetByGroupIdUsecase.js";
 import { MemberGetByIdUsecase } from "../../application/usecases/member/memberGetByIdUsecase.js";
 import { MemberJoinToGroupUsecase } from "../../application/usecases/member/memberJoinToGroupUsecase.js";
 import { MemberNameUpdateUsecase } from "../../application/usecases/member/memberNameUpdateUsecase.js";
 import { MemberStatusUpdateUsecase } from "../../application/usecases/member/memberStatusUpdateUsecase.js";
 import { MemberXpManagerUsecase } from "../../application/usecases/member/memberXpManagerUsecase.js";
-import { GroupSQLiteRespository } from "../../infrastructure/repositories/groupSQLiteRepository.js";
-import { MemberSQLiteRespository } from "../../infrastructure/repositories/memberSQLiteRepository.js";
+import { MemberPgRepository } from "../../infrastructure/repositories/memberPgRepository.js";
 
 export class MemberController {
-    /** 
-     * @property {GroupSQLiteRespository} groupRepository - group sqlite repository
-     * @property {MemberSQLiteRespository} memberRepository - member sqlite repository
-     */
-    #groupRepository = new GroupSQLiteRespository();
-    #memberRepository = new MemberSQLiteRespository();
+    /** @property {MemberPgRepository} memberRepository */ 
+    #memberRepository = new MemberPgRepository();
 
     /**
      * create.
@@ -51,6 +47,17 @@ export class MemberController {
     */
     async getByGroupId(id, groupId) {
         const usecase = new MemberGetByGroupIdUsecase(this.#memberRepository);
+        return await usecase.execute(id, groupId);
+    }
+
+    /**
+     * get by association.
+     * @param {string} id - member id.
+     * @param {string} groupId - groupd id.
+     * @returns {Promise<Result>}
+    */
+    async getByAssociation(id, groupId) {
+        const usecase = new MemberGetByAssociationUsacase(this.#memberRepository);
         return await usecase.execute(id, groupId);
     }
 
@@ -111,7 +118,7 @@ export class MemberController {
      * @returns {Promise<Result>}
     */
     async deleteByGroupId(id, groupId) {
-        const usecase = new MemberDeleteByGroupIdUsecase(this.#memberRepository, this.#groupRepository);
+        const usecase = new MemberDeleteByGroupIdUsecase(this.#memberRepository);
         return await usecase.execute(id, groupId);
     }
 
@@ -122,7 +129,7 @@ export class MemberController {
      * @returns {Promise<Result>}
     */
     async addMemberToGroup(id, groupId) {
-        const usecase = new MemberJoinToGroupUsecase(this.#memberRepository, this.#groupRepository);
+        const usecase = new MemberJoinToGroupUsecase(this.#memberRepository);
         return await usecase.execute(id, groupId);
     }
 
@@ -140,12 +147,13 @@ export class MemberController {
 
     /**
      * xp manager.
+     * @param {string} memberId - member id.
      * @param {string} groupId - group id.
      * @param {object} member
      * @returns {Result}
     */
-    xpManager(groupId, member) {
+    xpManager(memberId, groupId, member) {
         const usecase = new MemberXpManagerUsecase();
-        return usecase.execute(groupId, member);
+        return usecase.execute(memberId, groupId, member);
     }
 }
