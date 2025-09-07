@@ -1,19 +1,15 @@
 import { BlockedModule } from "../../../domain/valueObject/BlockedModule.js";
-import { GroupSQLiteRespository } from "../../../infrastructure/repositories/groupSQLiteRepository.js";
 import { Result } from "../../common/result.js";
+import { IGroupRepository } from "../../interfaces/IGroupRepository.js";
 
 export class GroupBlockModuleUsecase {
-    /**
-     * @property {GroupSQLiteRespository} _repository - SQLite repository.
-     */
-    #_repositoy;
+    /** @property {IGroupRepository} _repository */
+    #_repository;
 
-    /**
-     * @param {GroupSQLiteRespository} repository - SQLite repository.
-     */
+    /** @param {IGroupRepository} repository */
     constructor(repository) {
-        /** @type {GroupSQLiteRespository}*/
-        this.#_repositoy = repository;
+        /** @type {IGroupRepository}*/
+        this.#_repository = repository;
     }
 
     /**
@@ -23,17 +19,12 @@ export class GroupBlockModuleUsecase {
      * @returns {Promise<Result>} Result.
     */
     async execute(groupId, moduleName) {
-        const [group, module] = await Promise.all([
-            this.#_repositoy.getByIdAsync(groupId),
-            this.#_repositoy.getModuleByName(groupId, moduleName),
-        ]);
-
-        if (!group) return Result.failure("Grupo não encontrado.", null);
+        const module = await this.#_repository.getModuleByNameAsync(groupId, moduleName);
         if (module) return Result.failure("O module já está bloqueado.", null);
 
         const newBockModule = new BlockedModule(groupId, moduleName);
 
-        await this.#_repositoy.blockModuleAsync(newBockModule);
+        await this.#_repository.blockModuleAsync(newBockModule);
 
         return Result.success("Module bloqueado com successo.", newBockModule);
     }
