@@ -1,12 +1,13 @@
-import { GroupSQLiteRespository } from "../../../infrastructure/repositories/groupSQLiteRepository.js";
 import { Result } from "../../common/result.js";
+import { IGroupRepository } from "../../interfaces/IGroupRepository.js";
 
 export class GroupGetByIdUsecase {
-    /** @property {GroupSQLiteRespository} _repository - SQLite repository*/
+    /** @property {IGroupRepository} _repository */
     #_repository;
 
-    /** @param {GroupSQLiteRespository} repository */
+    /** @param {IGroupRepository} repository */
     constructor(repository) {
+        /** @type {IGroupRepository}*/
         this.#_repository = repository;
     }
 
