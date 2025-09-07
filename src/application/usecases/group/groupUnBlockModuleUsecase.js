@@ -1,19 +1,14 @@
-import { BlockedModule } from "../../../domain/valueObject/BlockedModule.js";
-import { GroupSQLiteRespository } from "../../../infrastructure/repositories/groupSQLiteRepository.js";
 import { Result } from "../../common/result.js";
+import { IGroupRepository } from "../../interfaces/IGroupRepository.js";
 
 export class GroupUnBlockModuleUsecase {
-    /**
-     * @property {GroupSQLiteRespository} _repository - SQLite repository.
-     */
-    #_repositoy;
+    /** @property {IGroupRepository} _repository */
+    #_repository;
 
-    /**
-     * @param {GroupSQLiteRespository} repository - SQLite repository.
-     */
+    /** @param {IGroupRepository} repository */
     constructor(repository) {
-        /** @type {GroupSQLiteRespository}*/
-        this.#_repositoy = repository;
+        /** @type {IGroupRepository}*/
+        this.#_repository = repository;
     }
 
     /**
@@ -23,15 +18,7 @@ export class GroupUnBlockModuleUsecase {
      * @returns {Promise<Result>} Result.
     */
     async execute(groupId, moduleName) {
-        const [group, module] = await Promise.all([
-            this.#_repositoy.getByIdAsync(groupId),
-            this.#_repositoy.getModuleByName(groupId, moduleName),
-        ]);
-
-        if (!group) return Result.failure("Grupo não encontrado.", null);
-        if (!module) return Result.failure("Module não encontrado.", null);
-
-        await this.#_repositoy.unBlockModule(groupId, moduleName);
+        await this.#_repository.unBlockModuleAsync(groupId, moduleName);
 
         return Result.success("Module desbloquado com successo.", null);
     }
