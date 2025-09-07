@@ -9,7 +9,7 @@
         ]
     },
     "include": [
-        "./**/*.js",
+        "./src/**/*.js",
         "node_modules/@types"
     ]
 }
