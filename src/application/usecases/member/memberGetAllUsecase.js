@@ -1,12 +1,13 @@
-import { MemberSQLiteRespository } from "../../../infrastructure/repositories/memberSQLiteRepository.js";
 import { Result } from "../../common/result.js";
+import { IMemberRepository } from "../../interfaces/IMemberRepository.js";
 
 export class MemberGetAllUsecase {
-    /** @property {MemberQLiteRespository} _repositoy - SQLite repository */
+    /** @property {IMemberRepository} _repository */
     #_repository;
 
-    /** @param {MemberSQLiteRespository} repository */
+    /** @param {IMemberRepository} repository */
     constructor(repository) {
+        /** @type {IMemberRepository}*/
         this.#_repository = repository;
     }
 
