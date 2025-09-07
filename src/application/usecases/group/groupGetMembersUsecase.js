@@ -1,18 +1,14 @@
-import { GroupSQLiteRespository } from "../../../infrastructure/repositories/groupSQLiteRepository.js";
 import { Result } from "../../common/result.js"
+import { IGroupRepository } from "../../interfaces/IGroupRepository.js";
 
 export class GroupGetMembersUsecase {
-    /**
-     * @property {GroupSQLiteRespository} _repository - SQLite repository.
-     */
-    #_repositoy;
+    /** @property {IGroupRepository} _repository */
+    #_repository;
 
-    /**
-     * @param {GroupSQLiteRespository} repository - SQLite repository.
-     */
+    /** @param {IGroupRepository} repository */
     constructor(repository) {
-        /** @type {GroupSQLiteRespository}*/
-        this.#_repositoy = repository;
+        /** @type {IGroupRepository}*/
+        this.#_repository = repository;
     }
 
     /**
@@ -21,7 +17,7 @@ export class GroupGetMembersUsecase {
      * @returns {Promise<Result>} Result 
     */
     async execute(id) {
-        const groupMembers = await this.#_repositoy.getMembers(id);
+        const groupMembers = await this.#_repository.getMembers(id);
         if (groupMembers.length < 1) Result.success("Nenhum membro foi encontrado", []);
 
         return Result.success(`${groupMembers.length} membro's encontrado's`, groupMembers);
