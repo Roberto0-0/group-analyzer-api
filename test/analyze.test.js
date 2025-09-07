@@ -1,6 +1,7 @@
-import test from "node:test";
+import test, { after } from "node:test";
 import assert from "node:assert/strict";
 import { Analyze } from "../src/Analyze.js";
+import { db } from "../src/infrastructure/persistence/dbContext.js";
 
 test("should analyze group chat", async () => {
     const groupChat = {
@@ -21,7 +22,7 @@ test("should analyze group chat", async () => {
         name: 'vendas',
         lastMessage: {
             _data: {
-                notifyName: 'Mariana silva',
+                notifyName: 'Mariana',
                 author: [Object],
             },
             hasMedia: false,
@@ -33,4 +34,8 @@ test("should analyze group chat", async () => {
     await (new Analyze().on(groupChat));
 
     assert.equal(true, true);
+
+    after(async () => {
+        await db.$client.end();
+    });
 });
