@@ -1,18 +1,14 @@
-import { GroupSQLiteRespository } from "../../../infrastructure/repositories/groupSQLiteRepository.js";
 import { Result } from "../../common/result.js"
+import { IGroupRepository } from "../../interfaces/IGroupRepository.js";
 
 export class GroupDeleteByIdUsecase {
-    /**
-     * @property {GroupSQLiteRespository} _repository - SQLite repository.
-     */
-    #_repositoy;
+    /** @property {IGroupRepository} _repository */
+    #_repository;
 
-    /**
-     * @param {GroupSQLiteRespository} repository - SQLite repository.
-     */
+    /** @param {IGroupRepository} repository */
     constructor(repository) {
-        /** @type {GroupSQLiteRespository}*/
-        this.#_repositoy = repository;
+        /** @type {IGroupRepository}*/
+        this.#_repository = repository;
     }
 
     /**
@@ -21,10 +17,10 @@ export class GroupDeleteByIdUsecase {
      * @returns {Promise<Result>} Result 
     */
     async execute(id) {
-        const groupExist = await this.#_repositoy.getByIdAsync(id);
+        const groupExist = await this.#_repository.getByIdAsync(id);
         if (!groupExist) return Result.failure("Grupo não encontrado.", null);
 
-        await this.#_repositoy.deleteByIdAsync(id);
+        await this.#_repository.deleteByIdAsync(id);
 
         return Result.success("Grupo deletado com sucesso.", null);
     }
