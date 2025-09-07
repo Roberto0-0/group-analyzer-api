@@ -1,26 +1,21 @@
 import { Result } from "../../application/common/result.js";
-import { GroupSQLiteRespository } from "../../infrastructure/repositories/groupSQLiteRepository.js";
 import { GroupCreateUsecase } from "../../application/usecases/group/groupCreateUsecase.js";
 import { GroupGetByIdUsecase } from "../../application/usecases/group/groupGetByIdUsecase.js";
 import { GroupGetAllUsecase } from "../../application/usecases/group/groupGetAllUsecase.js";
 import { GroupDeleteByIdUsecase } from "../../application/usecases/group/groupDeleteByIdUsecase.js";
 import { GroupNameUpdateUsecase } from "../../application/usecases/group/groupNameUpdateUsecase.js";
 import { GroupMemberCountUpdateUsecase } from "../../application/usecases/group/groupMemberCountUpdateUsecase.js";
-import { GroupGetMembersUsecase } from "../../application/usecases/group/groupGetMembers.js";
+import { GroupGetMembersUsecase } from "../../application/usecases/group/groupGetMembersUsecase.js";
 import { GroupSetMemberTimeoutUsecase } from "../../application/usecases/group/groupSetMemberTimeoutUsecase.js";
-import { MemberSQLiteRespository } from "../../infrastructure/repositories/memberSQLiteRepository.js";
 import { GroupVerifyMemberTimeoutUsecase } from "../../application/usecases/group/groupVerifyMemberTimeoutUsecase.js";
 import { GroupBlockModuleUsecase } from "../../application/usecases/group/groupBlockModuleUsecase.js";
 import { GroupUnBlockModuleUsecase } from "../../application/usecases/group/groupUnBlockModuleUsecase.js";
 import { GroupVerifyBlockedModuleUsecase } from "../../application/usecases/group/groupVerifyBlockedModuleUsecase.js";
+import { GroupPgRepository } from "../../infrastructure/repositories/groupPgRepository.js";
 
 export class GroupController {
-    /** 
-     * @property {GroupSQLiteRespository} groupRepository - group sqlite repository
-     * @property {MemberSQLiteRespository} memberRepository - member sqlite repository
-     */
-    #groupRepository = new GroupSQLiteRespository();
-    #memberRepository = new MemberSQLiteRespository();
+    /** @property {GroupPgRepository} groupRepository */
+    #repository = new GroupPgRepository();
 
     /**
      * create.
@@ -28,7 +23,7 @@ export class GroupController {
      * @returns {Promise<Result>}
     */
     async create(request) {
-        const usecase = new GroupCreateUsecase(this.#groupRepository);
+        const usecase = new GroupCreateUsecase(this.#repository);
         return await usecase.execute(request);
     }
 
@@ -38,7 +33,7 @@ export class GroupController {
      * @returns {Promise<Result>}
     */
     async getById(id) {
-        const usecase = new GroupGetByIdUsecase(this.#groupRepository);
+        const usecase = new GroupGetByIdUsecase(this.#repository);
         return await usecase.execute(id);
     }
 
@@ -47,7 +42,7 @@ export class GroupController {
      * @returns {Promise<Result>}
     */
     async getAll() {
-        const usecase = new GroupGetAllUsecase(this.#groupRepository);
+        const usecase = new GroupGetAllUsecase(this.#repository);
         return await usecase.execute();
     }
 
@@ -57,7 +52,7 @@ export class GroupController {
      * @returns {Promise<Result>}
     */
     async getMembers(id) {
-        const usecase = new GroupGetMembersUsecase(this.#groupRepository);
+        const usecase = new GroupGetMembersUsecase(this.#repository);
         return await usecase.execute(id);
     }
 
@@ -68,7 +63,7 @@ export class GroupController {
      * @returns {Promise<Result>}
     */
     async newName(id, name) {
-        const usecase = new GroupNameUpdateUsecase(this.#groupRepository);
+        const usecase = new GroupNameUpdateUsecase(this.#repository);
         return await usecase.execute(id, name);
     }
 
@@ -79,7 +74,7 @@ export class GroupController {
      * @returns {Promise<Result>}
     */
     async newMemberCount(id, newCount) {
-        const usecase = new GroupMemberCountUpdateUsecase(this.#groupRepository);
+        const usecase = new GroupMemberCountUpdateUsecase(this.#repository);
         return await usecase.execute(id, newCount);
     }
 
@@ -89,7 +84,7 @@ export class GroupController {
      * @returns {Promise<Result>}
     */
     async deleteById(id) {
-        const usecase = new GroupDeleteByIdUsecase(this.#groupRepository);
+        const usecase = new GroupDeleteByIdUsecase(this.#repository);
         return await usecase.execute(id);
     }
 
@@ -101,7 +96,7 @@ export class GroupController {
      * @returns {Promise<Result>}
     */
     async setTimeout(id, memberId, request) {
-        const usecase = new GroupSetMemberTimeoutUsecase(this.#groupRepository, this.#memberRepository);
+        const usecase = new GroupSetMemberTimeoutUsecase(this.#repository);
         return await usecase.execute(id, memberId, request);
     }
 
@@ -112,7 +107,7 @@ export class GroupController {
      * @returns {Promise<Result>}
     */
     async timeoutVerify(id, memberId) {
-        const usecase = new GroupVerifyMemberTimeoutUsecase(this.#groupRepository, this.#memberRepository);
+        const usecase = new GroupVerifyMemberTimeoutUsecase(this.#repository);
         return await usecase.execute(id, memberId);
     }
 
@@ -123,7 +118,7 @@ export class GroupController {
      * @returns {Promise<Result>}
     */
     async blockModule(id, moduleName) {
-        const usecase = new GroupBlockModuleUsecase(this.#groupRepository);
+        const usecase = new GroupBlockModuleUsecase(this.#repository);
         return await usecase.execute(id, moduleName);
     }
 
@@ -134,7 +129,7 @@ export class GroupController {
      * @returns {Promise<Result>}
     */
     async unblockModule(id, moduleName) {
-        const usecase = new GroupUnBlockModuleUsecase(this.#groupRepository);
+        const usecase = new GroupUnBlockModuleUsecase(this.#repository);
         return await usecase.execute(id, moduleName);
     }
 
@@ -145,7 +140,7 @@ export class GroupController {
      * @returns {Promise<Result>}
     */
     async moduleVerify(id, moduleName) {
-        const usecase = new GroupVerifyBlockedModuleUsecase(this.#groupRepository);
+        const usecase = new GroupVerifyBlockedModuleUsecase(this.#repository);
         return await usecase.execute(id, moduleName);
     }
 }
