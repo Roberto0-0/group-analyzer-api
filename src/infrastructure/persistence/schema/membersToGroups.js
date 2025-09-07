@@ -1,23 +1,23 @@
-import { sqliteTable, index, primaryKey } from "drizzle-orm/sqlite-core";
-import * as types from "drizzle-orm/sqlite-core";
+import { pgTable, index, primaryKey } from "drizzle-orm/pg-core";
+import * as types from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { members } from "./member.js";
 import { groups } from "./group.js";
 
-export const membersToGroups = sqliteTable(
+export const membersToGroups = pgTable(
     "members_to_groups",
     {
-        memberId: types.text("member_id", { length: 255 })
+        memberId: types.varchar("member_id")
             .notNull()
             .references(() => members.id, { onDelete: "cascade" }),
-        groupId: types.text("gorup_id", { length: 255 })
+        groupId: types.varchar("gorup_id")
             .notNull()
             .references(() => groups.id, { onDelete: "cascade" }),
-        level: types.integer("level", { mode: "number" }).notNull(),
-        xp: types.integer("xp", { mode: "number" }).notNull(),
-        xpRequired: types.integer("xp_required", { mode: "number" }).notNull(),
-        messageCount: types.integer("message_count", { mode: "number" }).notNull(),
-        lastMessageAt: types.integer("last_message_at", { mode: "number" }).notNull(),
+        level: types.integer("level").notNull(),
+        xp: types.bigint("xp", { mode: "number" }).notNull(),
+        xpRequired: types.bigint("xp_required", { mode: "number" }).notNull(),
+        messageCount: types.bigint("message_count", { mode: "number" }).notNull(),
+        lastMessageAt: types.bigint("last_message_at", { mode: "number" }).notNull(),
     },
     (table) => [
         index("member_to_grupo_idx").on(table.memberId),
