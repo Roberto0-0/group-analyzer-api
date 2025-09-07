@@ -1,20 +1,20 @@
-import { sqliteTable, index, primaryKey } from "drizzle-orm/sqlite-core";
-import * as type from "drizzle-orm/sqlite-core";
+import { pgTable, index, primaryKey } from "drizzle-orm/pg-core";
+import * as types from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { groups } from "./group.js";
 import { members } from "./member.js";
 
-export const membersTimeouts = sqliteTable(
+export const membersTimeouts = pgTable(
     "members_timeouts",
     {
-        groupId: type.text("group_id", { length: 255 })
+        groupId: types.varchar("group_id")
             .references(() => groups.id, { onDelete: "cascade" })
             .notNull(),
-        memberId: type.text("member_id", { length: 255 })
+        memberId: types.varchar("member_id")
             .references(() => members.id, { onDelete: "cascade" })
             .notNull(),
-        expiresIn: type.integer("expires_in", { mode: "number" }).notNull(),
-        reason: type.text("reason", { length: 255 })
+        expiresIn: types.bigint("expires_in", { mode: "number" }).notNull(),
+        reason: types.text("reason")
     },
     (table) => [
         index("group_timeouts_idx").on(table.groupId),
