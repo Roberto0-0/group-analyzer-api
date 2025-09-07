@@ -118,6 +118,23 @@ export class MemberSQLiteRespository {
     }
 
     /**
+     * Get member by association. 
+     * @param {string} memberId - member id.
+     * @param {string} groupId - group id.
+     * @returns {Promise<object|null>} object or []
+     */
+    async getByAssociantion(memberId, groupId) {
+        const member = await db.select()
+            .from(membersToGroups)
+            .where(and(
+                eq(membersToGroups.memberId, memberId),
+                eq(membersToGroups.groupId, groupId)
+            ));
+
+        return (!member[0]) ? null : member[0];
+    }
+
+    /**
      * Get member count by association.
      * @param {string} id - member id.
      * @returns {Promise<object>} member count.
