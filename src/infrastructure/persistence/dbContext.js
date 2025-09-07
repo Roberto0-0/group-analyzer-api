@@ -1,11 +1,10 @@
-import { drizzle } from "drizzle-orm/better-sqlite3";
-import Database from "better-sqlite3";
+import { drizzle } from "drizzle-orm/node-postgres";
+import { Pool } from "pg";
 import * as schema from "./schema/index.js";
-import { join } from "node:path";
-(await import("dotenv")).config({
-    path: join(process.cwd(), ".env"),
-    quiet: true
+(await import("dotenv")).config({ quiet: true });
+
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL
 });
 
-const sqlite = new Database(join(process.cwd(), process.env.DATA_SOURCE));
-export const db = drizzle(sqlite, { schema });
+export const db = drizzle(pool, { schema });
