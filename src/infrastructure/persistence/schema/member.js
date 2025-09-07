@@ -1,15 +1,15 @@
-import { sqliteTable } from "drizzle-orm/sqlite-core";
-import * as types from "drizzle-orm/sqlite-core";
+import { pgTable } from "drizzle-orm/pg-core";
+import * as types from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { membersToGroups } from "./membersToGroups.js";
 import { membersTimeouts } from "./membersTimeouts.js";
 
-export const members = sqliteTable(
+export const members = pgTable(
     "members",
     {
-        id: types.text("id", { length: 255 }).notNull().primaryKey(),
-        name: types.text("name", { length: 255 }).notNull(),
-        shortName: types.text("short_name", { length: 255 }).notNull() 
+        id: types.varchar("id").notNull().primaryKey(),
+        name: types.varchar("name").notNull(),
+        shortName: types.varchar("short_name").notNull() 
     }
 );
 
