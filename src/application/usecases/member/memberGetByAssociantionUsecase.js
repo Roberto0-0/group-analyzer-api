@@ -1,14 +1,14 @@
-import { MemberSQLiteRespository } from "../../../infrastructure/repositories/memberSQLiteRepository.js";
 import { Result } from "../../common/result.js";
+import { IMemberRepository } from "../../interfaces/IMemberRepository.js";
 
 export class MemberGetByAssociationUsacase {
-    /**@property {MemberSQLiteRespository} _memberRepository - member SQLite repository.*/
-    #_memberRepositoy;
+    /** @property {IMemberRepository} _repository */
+    #_repository;
 
-    /** @param {MemberSQLiteRespository} memberRepository - member SQLite repository.*/
-    constructor(memberRepository) {
-        /** @type {MemberSQLiteRespository}*/
-        this.#_memberRepositoy = memberRepository;
+    /** @param {IMemberRepository} repository */
+    constructor(repository) {
+        /** @type {IMemberRepository}*/
+        this.#_repository = repository;
     }
 
     /**
@@ -18,7 +18,7 @@ export class MemberGetByAssociationUsacase {
      * @returns {Promise<Result>} Result.
      */
     async execute(id, groupId) {
-        const member = await this.#_memberRepositoy.getByAssociantion(id, groupId);
+        const member = await this.#_repository.getByAssociantion(id, groupId);
         if (!member) return Result.failure("Associação não encontrada.", null);
 
         return Result.success("Associação encontrada.", member);
