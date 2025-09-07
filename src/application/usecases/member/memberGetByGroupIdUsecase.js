@@ -1,14 +1,14 @@
-import { MemberSQLiteRespository } from "../../../infrastructure/repositories/memberSQLiteRepository.js";
 import { Result } from "../../common/result.js";
+import { IMemberRepository } from "../../interfaces/IMemberRepository.js";
 
 export class MemberGetByGroupIdUsecase {
-    /**@property {MemberSQLiteRespository} _memberRepository - member SQLite repository.*/
-    #_memberRepositoy;
+    /** @property {IMemberRepository} _repository */
+    #_repository;
 
-    /** @param {MemberSQLiteRespository} memberRepository - member SQLite repository.*/
-    constructor(memberRepository) {
-        /** @type {MemberSQLiteRespository}*/
-        this.#_memberRepositoy = memberRepository;
+    /** @param {IMemberRepository} repository */
+    constructor(repository) {
+        /** @type {IMemberRepository}*/
+        this.#_repository = repository;
     }
 
     /**
@@ -18,7 +18,7 @@ export class MemberGetByGroupIdUsecase {
      * @returns {Promise<Result>} Result.
      */
     async execute(id, groupId) {
-        const member = await this.#_memberRepositoy.getByGroupId(id, groupId);
+        const member = await this.#_repository.getByGroupId(id, groupId);
         if (!member) return Result.failure("Membro para o grupo não encontrado.", null);
 
         return Result.success("Membro para o grupo encontrado.", member);
