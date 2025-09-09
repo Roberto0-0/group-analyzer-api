@@ -28,7 +28,7 @@ export class MemberGetByGroupDTO {
         /** @type {string} */
         this.name = name;
         /** @type {string} */
-        this.shortNeme = shortName;
+        this.shortName = shortName;
         /** @type {number} */
         this.level = level;
         /** @type {number} */
