@@ -4,7 +4,7 @@ import * as schema from "./schema/index.js";
 (await import("dotenv")).config({ quiet: true });
 
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL
+    connectionString: process.env.PG_DATABASE_URL
 });
 
 export const db = drizzle(pool, { schema });
