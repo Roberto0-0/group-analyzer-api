@@ -12,6 +12,6 @@ export default defineConfig({
     schema: resolve(dirname__, "./src/infrastructure/persistence/schema/*.js"),
     out: resolve(dirname__, "./src/infrastructure/persistence/migrations"),
     dbCredentials: {
-        url: process.env.DATABASE_URL 
+        url: process.env.PG_DATABASE_URL 
     }
 });
