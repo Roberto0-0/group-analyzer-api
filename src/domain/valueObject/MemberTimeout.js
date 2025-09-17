@@ -30,17 +30,18 @@ export class MemberTimeout {
     */
     #applyDuration(timeRef) {
         let time = parseInt(timeRef, 10);
-        const type = timeRef.replace(/[0-9]/g, "");
+        let type = timeRef.replace(/[0-9]/g, "").toLowerCase();
         let duration;
-        const typeLimit = new Map();
 
-        typeLimit.set("s", 60);
-        typeLimit.set("m", 60);
-        typeLimit.set("h", 24);
-        typeLimit.set("d", 7);
+        const types = {
+            "s": 60,
+            "m": 60,
+            "h": 24,
+            "d": 7
+        }
 
-        if (typeLimit.has(type)) {
-            const timeLimite = typeLimit.get(type)
+        if (types[type]) {
+            const timeLimite = types[type];
             time = (time > timeLimite) ? timeLimite : time;
         }
 
