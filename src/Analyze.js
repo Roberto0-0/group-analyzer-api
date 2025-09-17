@@ -47,7 +47,7 @@ export class Analyze {
                 group = (await this.#group.create({
                     id: chat.id._serialized,
                     name: chat.name,
-                    memberCount: chat.groupMetadata.size,
+                    memberCount: chat.participants.length,
                     createdAt: chat.groupMetadata.creation * 1000
                 })).data;
             } else { group = getGroupResponse.data; }
@@ -55,8 +55,8 @@ export class Analyze {
             groupsCache.set(group.id, group);
         }
 
-        if (group.memberCount !== chat.groupMetadata.size) {
-            if (chat.groupMetadata.size < group.memberCount) {
+        if (group.memberCount !== chat.participants.length) {
+            if (chat.participants.length < group.memberCount) {
                 const members = (await this.#group.getMembers(group.id)).data;
 
                 /** @type {Array<object>} participants */
@@ -70,8 +70,8 @@ export class Analyze {
                     } else { await this.#member.deleteById(members[i].id); }
                 }
 
-                await this.#group.newMemberCount(group.id, chat.groupMetadata.size);
-            } else { await this.#group.newMemberCount(group.id, chat.groupMetadata.size); }
+                await this.#group.newMemberCount(group.id, chat.participants.length);
+            } else { await this.#group.newMemberCount(group.id, chat.participants.length); }
         }
 
         if (group.name !== chat.name) await this.#group.newName(group.id, chat.name);
